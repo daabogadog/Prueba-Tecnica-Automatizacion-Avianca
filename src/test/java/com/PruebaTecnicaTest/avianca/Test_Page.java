@@ -47,7 +47,7 @@ public class Test_Page {
 		assertTrue(consult_page.Validar_presente_hora(driver));
 		assertTrue(consult_page.Validar_presente_precio(driver));
 		assertTrue(consult_page.Cantidad_de_resultados (driver));
-		consult_page.Ordenar_precio(driver);
+		assertTrue(consult_page.Ordenar_precio(driver));
 	}
 	
 	
