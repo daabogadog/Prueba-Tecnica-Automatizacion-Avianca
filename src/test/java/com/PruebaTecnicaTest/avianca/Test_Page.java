@@ -55,8 +55,8 @@ public class Test_Page {
 	@Test
 	public void test_consultar_vuelo() throws InterruptedException, IOException {
 
-		String filepath = "C:\\Users\\Rentadvisor\\Desktop\\Libroprueba.xlsx";
-		//String filepath = "./src/test/resources/Libroprueba.xlsx";
+		//String filepath = "C:\\Users\\Rentadvisor\\Desktop\\Libroprueba.xlsx";
+		String filepath = "./src/test/resources/Libroprueba.xlsx";
 		
 		String ida ="";
 		String regreso ="";
