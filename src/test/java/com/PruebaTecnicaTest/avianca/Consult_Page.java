@@ -1,11 +1,21 @@
 package com.PruebaTecnicaTest.avianca;
 
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -22,7 +32,7 @@ public class Consult_Page extends Base {
 	// elementos desde y hacia
 	By TextDesde = By.xpath("/html/body/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div[1]/div/div/div/div/section/div[3]/div[4]/div[1]/div/form/div/div[2]/div/div/div[1]/fieldset/div/div[1]/div/label/div/input[1]");
 	By TextHacia = By.xpath("/html/body/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div[1]/div/div/div/div/section/div[3]/div[4]/div[1]/div/form/div/div[2]/div/div/div[1]/fieldset/div/div[3]/div[2]/label/div/input[1]");
-
+	//pbOrigen
 	// elementos fecha
 	By iconoCalendario = By.xpath("/html/body/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div[1]/div/div/div/div/section/div[3]/div[4]/div[1]/div/form/div/div[2]/div/div/div[2]/fieldset/div/div/div[1]/label/div/div/span/i");
 	By fechasiguiente = By.xpath("/html/body/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div[1]/div/div/div/div/section/div[3]/div[4]/div[1]/div/form/div/div[2]/div/div/div[2]/fieldset/div/div/div[2]/div[1]/table/tbody/tr/td[2]/div[1]/div[2]/i");
@@ -39,6 +49,10 @@ public class Consult_Page extends Base {
 	// elementos booking avianca
 	By OrdenarHora = By.xpath("/html/body/app-root/main/div/avail-page/div/div/avail-cont/avail-pres/avail-header-pres/fixed-card-element/div[1]/div/div[1]/div/button[1]/span");
 	By OrdenarPrecio = By.xpath("/html/body/app-root/main/div/avail-page/div/div/avail-cont/avail-pres/avail-header-pres/fixed-card-element/div[1]/div/div[1]/div/button[2]/span");
+	
+	By continuar= By.xpath("//*[starts-with(@id,'continue-btn-footer-static')]");
+	By vueloderegreso = By.xpath("/html/body/app-root/main/div/avail-page/div/div/avail-cont/avail-pres/air-calendar-cont/air-calendar-pres/expander-elem/div[1]/div[1]/h1");                        
+	                     
 	
 	public Consult_Page(WebDriver driver) {
 		super(driver);
@@ -101,6 +115,18 @@ public class Consult_Page extends Base {
 		  
 		  
 	  }
+	  
+	  public String Seleccionar_vuelo(WebDriver driver) throws InterruptedException {
+		  By radiobutton = By.xpath("//*[@class='radio-button-unchecked']");
+		  List<WebElement> elementsalida = driver.findElements(radiobutton);
+		  elementsalida.get(2).click();	
+		  Thread.sleep(1000);
+		  click(continuar);
+		  Thread.sleep(2000);
+		  String vuelo =istext(vueloderegreso);
+		  return vuelo;
+	  }
+	  
 	 
 	  //Metodo para seleccionar pasajeros y buscar vuelos
 	  public void Seleccionar_pasajeros_Buscar_vuelos(WebDriver driver) throws InterruptedException {
@@ -110,12 +136,14 @@ public class Consult_Page extends Base {
 		 
 		  click(pasajeros_continuar);
 		  click(Btnbuscarvuelos);
+		  	  
+		
 				  
 	  }
 	  
 	  //Validar que esta presenta la hora del vuelo
       public boolean Validar_presente_hora(WebDriver driver) throws InterruptedException {
-    	WebDriverWait wait = new WebDriverWait(driver, 10);
+    	WebDriverWait wait = new WebDriverWait(driver, 20);
   		wait.until(ExpectedConditions.visibilityOfElementLocated(OrdenarHora));  	  
 	      return isDisplayed(OrdenarHora);
 	  }
@@ -166,9 +194,46 @@ public class Consult_Page extends Base {
     	 
       }
       
-     
-      
-      
-	  
+      //Metodo para traer data de un excel tipo string
+      public String getCellValue_string(String filepath, String sheetName, int rowNumber, int cellNumber) throws IOException {
+  		
+  		File file = new File(filepath);
+  		
+  		FileInputStream inputStream = new FileInputStream(file);
+  		
+  		XSSFWorkbook newWorkbook = new XSSFWorkbook(inputStream);
+  		
+  		XSSFSheet newSheet = newWorkbook.getSheet(sheetName);
+  		
+  		XSSFRow row = newSheet.getRow(rowNumber);
+  		
+  		XSSFCell cell = row.getCell(cellNumber);
+  		
+  		return cell.getStringCellValue();
 
+  		
+  		
+  	}
+      //Metodo para traer data de un excel tipo int
+      public int getCellValue_int(String filepath, String sheetName, int rowNumber, int cellNumber) throws IOException {
+    		
+    		File file = new File(filepath);
+    		
+    		FileInputStream inputStream = new FileInputStream(file);
+    		
+    		XSSFWorkbook newWorkbook = new XSSFWorkbook(inputStream);
+    		
+    		XSSFSheet newSheet = newWorkbook.getSheet(sheetName);
+    		
+    		XSSFRow row = newSheet.getRow(rowNumber);
+    		
+    		XSSFCell cell = row.getCell(cellNumber);
+    		
+    		return (int) cell.getNumericCellValue();
+
+    	}
+	  
+      
+      
+      
 }
